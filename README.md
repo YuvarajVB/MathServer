@@ -1,5 +1,5 @@
 # Ex.05 Design a Website for Server Side Processing
-## Date:
+
 
 ## AIM:
 To design a website to find surface area of a Right Cylinder in server side.
@@ -106,14 +106,52 @@ h3 {
 </body>
 </html>
 
+views.py
+
+from django.shortcuts import render
+def surfacearea(request):
+    context = {}
+    context['area'] = "0"
+    context['r'] = "0"
+    context['h'] = "0"
+    if request.method == 'POST':
+        print("POST method is used")
+        print('request.POST:', request.POST)
+        r = request.POST.get('radius', '0') 
+        h = request.POST.get('height', '0') 
+        print('radius =', r)
+        print('height =', h)
+        area = 2 * 3.14 * int(r) * int(h) + 2*3.14*int(r)*int(r)
+        context['area'] = area
+        context['r'] = r
+        context['h'] = h
+        print('Area =', area)
+    
+    return render(request, 'yuviapp/math.html',context)
+
+urls.py
+
+from django.contrib import admin
+from django.urls import path
+from yuviapp import views
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('surfacearea/',views.surfacearea,name="surfacearea"),
+    path('',views.surfacearea,name="surfcaearea")
+]
+
 ```
 
 
 ## SERVER SIDE PROCESSING:
+![Screenshot 2024-10-31 204013](https://github.com/user-attachments/assets/0839d5da-15ec-40e8-a78c-f81e747f16e8)
+
 
 
 
 ## HOMEPAGE:
+![Screenshot 2024-10-31 203558](https://github.com/user-attachments/assets/c56d9d94-85cc-4045-a6e8-6776f93fbed5)
+
 
 
 ## RESULT:
