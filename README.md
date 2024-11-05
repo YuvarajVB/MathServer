@@ -1,13 +1,14 @@
 # Ex.05 Design a Website for Server Side Processing
 
-
 ## AIM:
-To design a website to find surface area of a Right Cylinder in server side.
+ To design a website to calculate the power of a lamp filament in an incandescent bulb in the server side. 
+
 
 ## FORMULA:
-Surface Area = 2Πrh + 2Πr<sup>2</sup>
-<br>r --> Radius of Right Cylinder
-<br>h --> Height of Right Cylinder
+P = I<sup>2</sup>R
+<br> P --> Power (in watts)
+<br> I --> Intensity
+<br> R --> Resistance
 
 ## DESIGN STEPS:
 
@@ -32,125 +33,161 @@ Publish the website in the given URL.
 ## PROGRAM :
 ```
 math.html
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset='utf-8'>
-<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-<title>Area of Surface</title>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<style type="text/css">
-body {
-    background-image: url('https://images.unsplash.com/photo-1520038569969-98da7959fcbd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTR8fHxlbnwwfHx8fHw%3D'); 
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    font-family: Arial, sans-serif;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamp Filament Power Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-.edge {
-    width: 100%;
-    padding-top: 180px;
-    text-align: center;
-}
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
 
-.box {
-    display: inline-block;
-    border: thick dashed #1a7c74;
-    width: 500px;
-    min-height: 300px;
-    font-size: 20px;
-    background-color: rgba(9, 192, 253, 0.8); /* Semi-transparent to blend with background */
-    border-radius: 15px;
-}
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            width: 100%;
+            text-align: left;
+        }
 
-.formelt {
-    color: black;
-    text-align: center;
-    margin-top: 8px;
-    margin-bottom: 6px;
-}
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
 
-h1 {
-    color: #FFFFFF;
-    padding-top: 20px;
-}
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
 
-h3 {
-    color: #FFFFFF;
-    margin-top: -10px;
-}
-</style>
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        p#result {
+            font-size: 18px;
+            text-align: center;
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
+
+    <script>
+        function calculatePower(event) {
+            event.preventDefault(); 
+            let intensity = parseFloat(document.getElementById('intensity').value);
+            let resistance = parseFloat(document.getElementById('resistance').value);
+            let power = Math.pow(intensity, 2) * resistance;
+            document.getElementById('result').textContent = `Power: ${power.toFixed(2)} watts`;
+        }
+    </script>
 </head>
 <body>
-<div class="edge">
-    <div class="box">
-        <h1>SURFACE AREA OF RIGHT CYLINDER</h1>
-        <h3>YUVARAJ V 212223230252</h3>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="formelt">
-                Radius: <input type="text" name="radius" value="{{r}}">m<br/>
-            </div>
-            <div class="formelt">
-                Height: <input type="text" name="height" value="{{h}}">m<br/>
-            </div>
-            <div class="formelt">
-                <input type="submit" value="Calculate"><br/>
-            </div>
-            <div class="formelt">
-                Area: <input type="text" name="area" value="{{area}}">m<sup>2</sup><br/>
-            </div>
+    <div>
+        <h1>Lamp Filament Power Calculator</h1>
+        <h2>YUVARAJ V 212223230252</h2>
+        <form id="powerForm" onsubmit="calculatePower(event)">
+            <label for="intensity">Intensity (I in Amps):</label>
+            <input type="number" id="intensity" name="intensity" step="any" required>
+
+            <label for="resistance">Resistance (R in Ohms):</label>
+            <input type="number" id="resistance" name="resistance" step="any" required>
+
+            <button type="submit">Calculate Power</button>
         </form>
+
+        <h2>Result:</h2>
+        <p id="result">Please enter values and calculate power.</p>
     </div>
-</div>
 </body>
 </html>
-
+```
+```
 views.py
-
 from django.shortcuts import render
-def surfacearea(request):
-    context = {}
-    context['area'] = "0"
-    context['r'] = "0"
-    context['h'] = "0"
+def power_calculation(request):
+    context = {
+        'power': "0",
+        'intensity': "0",
+        'resistance': "0"
+    }
+    
     if request.method == 'POST':
         print("POST method is used")
-        print('request.POST:', request.POST)
-        r = request.POST.get('radius', '0') 
-        h = request.POST.get('height', '0') 
-        print('radius =', r)
-        print('height =', h)
-        area = 2 * 3.14 * int(r) * int(h) + 2*3.14*int(r)*int(r)
-        context['area'] = area
-        context['r'] = r
-        context['h'] = h
-        print('Area =', area)
-    
-    return render(request, 'yuviapp/math.html',context)
+        intensity = request.POST.get('intensity', '0')
+        resistance = request.POST.get('resistance', '0')
+        print('Intensity =', intensity)
+        print('Resistance =', resistance)
+        
+        # Calculate power using the formula P = I^2 * R
+        try:
+            power = (float(intensity) ** 2) * float(resistance)
+            context['power'] = f"{power:.2f}"
+            context['intensity'] = intensity
+            context['resistance'] = resistance
+            print('Power =', power)
+        except ValueError:
+            context['error'] = "Invalid input. Please enter numerical values for both intensity and resistance."
 
+    return render(request, 'yuviapp/math.html', context)
+```
+```
 urls.py
-
 from django.contrib import admin
 from django.urls import path
-from yuviapp import views
+from yuviapp import views  # Adjust 'yuviapp' to your app name
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('surfacearea/',views.surfacearea,name="surfacearea"),
-    path('',views.surfacearea,name="surfcaearea")
+    path('power-calculation/', views.power_calculation, name='power_calculation'),
+    path('', views.power_calculation, name='home'),  # Set as the homepage
 ]
-
 ```
-
-
 ## SERVER SIDE PROCESSING:
-![Screenshot 2024-10-31 204013](https://github.com/user-attachments/assets/0839d5da-15ec-40e8-a78c-f81e747f16e8)
-
-
+![image](https://github.com/user-attachments/assets/af0eb6c9-9d2e-47eb-ba90-bac473fe7cd6)
 
 
 ## HOMEPAGE:
-![Screenshot 2024-10-31 203558](https://github.com/user-attachments/assets/c56d9d94-85cc-4045-a6e8-6776f93fbed5)
+
+![Screenshot 2024-11-05 105433](https://github.com/user-attachments/assets/949fa34a-f08f-4d60-82a2-00303b071cf8)
 
 
 
